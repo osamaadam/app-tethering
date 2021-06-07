@@ -14,7 +14,7 @@ const App = () => {
     const socket = io("http://localhost:4000");
     socket.on("id", (data) => {
       if (data === code)
-        window.open(`http://localhost:4000/?id=${data}`, "_blank");
+        window.open(`http://localhost:4000/${data}`, "_blank");
     });
   }, []);
 

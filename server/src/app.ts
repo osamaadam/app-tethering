@@ -31,12 +31,16 @@ app.get("/ping", (req, res) => {
   res.send("PONG!");
 });
 
-app.get("/", (req, res) => {
-  em.emit("qr-read", req.query.id);
+app.get("/:id", (req, res) => {
   res.send(
-    `Hello, I'm the server, and I'm running on ${req.hostname}:${PORT}, your QR code reads: ${req.query.id}`
+    `Hello, I'm the server, and I'm running on ${req.hostname}:${PORT}, your QR code reads: ${req.params.id}`
   );
 });
+
+app.get("/send/:id", (req,res) => {
+  em.emit("qr-read", req.params.id);
+  res.sendStatus(200);
+})
 
 server.listen(+PORT, () => {
   console.log(`App listening on port ${PORT}`);
