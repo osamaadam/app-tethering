@@ -1,0 +1,3 @@
+[submodule "AppTetheringMobile"]
+	path = AppTetheringMobile
+	url = git@github.com:osamaadam/AppTetheringMobile.git
