@@ -3,8 +3,12 @@ import http from "http";
 import { Server } from "socket.io";
 import events from "events";
 import cors from "cors";
+import { lookup } from "dns";
+import { hostname } from "os";
+import { promisify } from "util";
 
 const em = new events.EventEmitter();
+const lookupPromise = promisify(lookup);
 
 const app = express();
 
@@ -37,10 +41,15 @@ app.get("/:id", (req, res) => {
   );
 });
 
-app.get("/send/:id", (req,res) => {
+app.get("/send/:id", (req, res) => {
   em.emit("qr-read", req.params.id);
   res.sendStatus(200);
-})
+});
+
+app.get("/", async (req, res) => {
+  const localIp = await lookupPromise(hostname());
+  res.json(localIp.address);
+});
 
 server.listen(+PORT, () => {
   console.log(`App listening on port ${PORT}`);

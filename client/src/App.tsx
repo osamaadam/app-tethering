@@ -8,14 +8,20 @@ const App = () => {
   const [qrCode, setQrCode] = useState("");
 
   useEffect(() => {
-    const code = nanoid();
-    setQrCode(code);
+    const constructUrl = async () => {
+      const localIp = await (await fetch("http://localhost:4000")).json();
 
-    const socket = io("http://localhost:4000");
-    socket.on("id", (data) => {
-      if (data === code)
-        window.open(`http://localhost:4000/${data}`, "_blank");
-    });
+      const code = nanoid();
+      const url = new URL(`/send/${code}`, `http://${localIp}:4000`);
+      setQrCode(url.href);
+
+      const socket = io("http://localhost:4000");
+      socket.on("id", (data) => {
+        if (data === code)
+          window.open(`http://localhost:4000/${data}`, "_blank");
+      });
+    };
+    constructUrl();
   }, []);
 
   return (
